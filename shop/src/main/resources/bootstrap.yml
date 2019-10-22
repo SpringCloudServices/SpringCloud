@@ -1,6 +1,6 @@
 spring:
   application:
-    name: departments
+    name: shop
   cloud:
     config:
       uri: http://localhost:8988
