@@ -1,0 +1,66 @@
+version: '3'
+services:
+  zookeeper:
+    image: wurstmeister/zookeeper
+  kafka:
+    image: wurstmeister/kafka
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: kafka
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+  configuration:
+    image: training/configuration
+    environment:
+      - KAFKA_SERVER=kafka
+      - KAFKA_PORT=9092
+      - SLEEP_TIME=5
+      - DEFAULT_PROFILE=production
+  discovery:
+    image: training/discovery
+    ports:
+      - 8089:8089
+    environment:
+      - CONFIGURATION=configuration
+      - CONFIGURATION_PORT=8888
+      - SLEEP_TIME=5
+      - DEFAULT_PROFILE=production
+  gateway:
+    image: training/discovery
+    ports:
+      - 8089:8089
+    environment:
+      - CONFIGURATION=configuration
+      - CONFIGURATION_PORT=8888
+      - SLEEP_TIME=5
+      - DEFAULT_PROFILE=production
+    departments-database:
+      image: postres:12-alpine
+      environment:
+        - POSTGRES_DB = depatments
+        - POSRGRES_USER=admin
+        - POSTRGES_PASSWORD=admin
+        - PGDATA=/var/libpostrger/data/departments
+      volumes:
+        - ./data/departments:/var/lib/postrgresql/data
+    users-database:
+      image: postres:12-alpine
+      environment:
+        - POSTGRES_DB = users
+        - POSRGRES_USER=admin
+        - POSTRGES_PASSWORD=admin
+        - PGDATA=/var/libpostrger/data/users
+      volumes:
+        - ./data/departments:/var/lib/postrgresql/users
+  users:
+    image: training/users
+    environment:
+      - CONFIGURATION=configuration
+      - CONFIGURATION_PORT=8888
+      - SLEEP_TIME=5
+      - DEFAULT_PROFILE=production
+  departments:
+    image: training/departments
+    environment:
+      - CONFIGURATION=configuration
+      - CONFIGURATION_PORT=8888
+      - SLEEP_TIME=5
+      - DEFAULT_PROFILE=production
