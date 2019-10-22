@@ -3,4 +3,5 @@ spring:
     name: shop
   cloud:
     config:
+      label: master
       uri: http://localhost:8988
