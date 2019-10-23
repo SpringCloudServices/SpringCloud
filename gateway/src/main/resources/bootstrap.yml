@@ -3,5 +3,5 @@ spring:
     name: gateway
   cloud:
     config:
-      label: master
+      label: feature01
       uri: http://localhost:8988
