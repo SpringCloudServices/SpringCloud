@@ -1,0 +1,9 @@
+server:
+  port: 8202
+spring:
+  application:
+    name: payment
+  cloud:
+    config:
+      label: feature01
+      uri: http://localhost:8988
